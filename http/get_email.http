@@ -1,0 +1,2 @@
+GET http://localhost:8000/email/3ec9e7ad-619d-4e03-8104-f722dac030cd HTTP/1.1
+content-type: application/json
