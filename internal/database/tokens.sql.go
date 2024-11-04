@@ -20,7 +20,7 @@ RETURNING id, email_id, token, created_at, expires_at, is_used
 
 type CreateTokenParams struct {
 	ID        uuid.UUID
-	EmailID   uuid.NullUUID
+	EmailID   uuid.UUID
 	Token     string
 	CreatedAt time.Time
 	ExpiresAt time.Time

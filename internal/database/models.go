@@ -20,7 +20,7 @@ type Email struct {
 
 type Token struct {
 	ID        uuid.UUID
-	EmailID   uuid.NullUUID
+	EmailID   uuid.UUID
 	Token     string
 	CreatedAt time.Time
 	ExpiresAt time.Time

@@ -48,21 +48,22 @@ func (apiCfg *apiConfig) handlerGetEmail(w http.ResponseWriter, r *http.Request)
 
 	id, err := uuid.Parse(param)
 
+	// if param is unable to be parsed as UUID
 	if err != nil {
+		// search param as string
 		email, err := apiCfg.DB.GetEmail(r.Context(), param)
 		if err != nil {
 			respondWithError(w, 400, "Invalid email")
 			return
 		}
 		respondWithJSON(w, 200, email)
-		return
+	} else {
+		// if param is able to be parsed as UUID, search param as UUID
+		email, err := apiCfg.DB.GetEmailByID(r.Context(), id)
+		if err != nil {
+			respondWithError(w, 400, "Invalid id")
+			return
+		}
+		respondWithJSON(w, 200, email)
 	}
-
-	email, err := apiCfg.DB.GetEmailByID(r.Context(), id)
-	if err != nil {
-		respondWithError(w, 400, "Invalid id")
-		return
-	}
-
-	respondWithJSON(w, 200, email)
 }
