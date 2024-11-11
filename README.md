@@ -52,7 +52,7 @@ This endpoint checks the readiness of the API.
 
 - **Description**: Returns a simple readiness check.
 - **Response**:
-  - `200 OK`: The API is ready
+  - `200 OK`: The API is ready.
 
 ### **GET /err**
 
@@ -60,7 +60,7 @@ This endpoint simulates an error for testing purposes.
 
 - **Description**: Used to trigger an error for testing.
 - **Response**:
-  - `500 Internal Server Error`: Something went wrong
+  - `500 Internal Server Error`: Something went wrong.
 
 ### **POST /email**
 
@@ -78,7 +78,7 @@ This endpoint creates a new email record in the database.
 This endpoint retrieves the details of an email by its unique identifier or the email string.
 
 - **Parameters**:
-  - `id` (UUID): The ID of the email record.
+  - `id` (UUID/string): The ID of the email or an email string.
   
 - **Response**:
   - `200 OK`: The email details are returned in JSON format.
