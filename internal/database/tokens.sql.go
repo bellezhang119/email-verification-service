@@ -45,3 +45,46 @@ func (q *Queries) CreateToken(ctx context.Context, arg CreateTokenParams) (Token
 	)
 	return i, err
 }
+
+const getToken = `-- name: GetToken :one
+SELECT id, email_id, token, created_at, expires_at
+FROM tokens
+WHERE token = $1
+`
+
+type GetTokenRow struct {
+	ID        uuid.UUID
+	EmailID   uuid.UUID
+	Token     string
+	CreatedAt time.Time
+	ExpiresAt time.Time
+}
+
+func (q *Queries) GetToken(ctx context.Context, token string) (GetTokenRow, error) {
+	row := q.db.QueryRowContext(ctx, getToken, token)
+	var i GetTokenRow
+	err := row.Scan(
+		&i.ID,
+		&i.EmailID,
+		&i.Token,
+		&i.CreatedAt,
+		&i.ExpiresAt,
+	)
+	return i, err
+}
+
+const updateTokenIsUsed = `-- name: UpdateTokenIsUsed :exec
+UPDATE tokens
+SET is_used = $2
+WHERE token = $1
+`
+
+type UpdateTokenIsUsedParams struct {
+	Token  string
+	IsUsed bool
+}
+
+func (q *Queries) UpdateTokenIsUsed(ctx context.Context, arg UpdateTokenIsUsedParams) error {
+	_, err := q.db.ExecContext(ctx, updateTokenIsUsed, arg.Token, arg.IsUsed)
+	return err
+}

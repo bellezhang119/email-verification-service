@@ -31,11 +31,11 @@ func (apiCfg *apiConfig) handlerCreateEmail(w http.ResponseWriter, r *http.Reque
 		Email:     params.Email,
 	})
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
+		respondWithError(w, 400, fmt.Sprintf("Couldn't create email: %v", err))
 		return
 	}
 
-	respondWithJSON(w, 200, email)
+	respondWithJSON(w, 201, email)
 }
 
 func (apiCfg *apiConfig) handlerGetEmail(w http.ResponseWriter, r *http.Request) {
@@ -53,7 +53,7 @@ func (apiCfg *apiConfig) handlerGetEmail(w http.ResponseWriter, r *http.Request)
 		// search param as string
 		email, err := apiCfg.DB.GetEmail(r.Context(), param)
 		if err != nil {
-			respondWithError(w, 400, "Invalid email")
+			respondWithError(w, 404, "Invalid email")
 			return
 		}
 		respondWithJSON(w, 200, email)
@@ -61,7 +61,7 @@ func (apiCfg *apiConfig) handlerGetEmail(w http.ResponseWriter, r *http.Request)
 		// if param is able to be parsed as UUID, search param as UUID
 		email, err := apiCfg.DB.GetEmailByID(r.Context(), id)
 		if err != nil {
-			respondWithError(w, 400, "Invalid id")
+			respondWithError(w, 404, "Invalid id")
 			return
 		}
 		respondWithJSON(w, 200, email)

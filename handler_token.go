@@ -53,5 +53,44 @@ func (apiCfg *apiConfig) handlerCreateToken(w http.ResponseWriter, r *http.Reque
 		respondWithError(w, 400, fmt.Sprintf("Error creating token: %v", err))
 	}
 
-	respondWithJSON(w, 200, token)
+	respondWithJSON(w, 201, token)
+}
+
+func (apiCfg *apiConfig) handlerVerify(w http.ResponseWriter, r *http.Request) {
+	tokenParam := r.URL.Query().Get("token")
+
+	if tokenParam == "" {
+		respondWithError(w, 400, "Invalid verification token")
+	}
+
+	dbToken, err := apiCfg.DB.GetToken(r.Context(), tokenParam)
+
+	if err != nil {
+		respondWithError(w, 404, "Invalid verification token")
+	}
+
+	if dbToken.ExpiresAt.After(time.Now()) {
+		err = apiCfg.DB.UpdateTokenIsUsed(r.Context(), database.UpdateTokenIsUsedParams{
+			Token:  tokenParam,
+			IsUsed: true,
+		})
+
+		if err != nil {
+			respondWithError(w, 500, fmt.Sprintf("Error updating token: %v", err))
+		}
+
+		err = apiCfg.DB.UpdateEmailIsVerified(r.Context(), database.UpdateEmailIsVerifiedParams{
+			ID:         dbToken.EmailID,
+			IsVerified: true,
+		})
+
+		if err != nil {
+			respondWithError(w, 500, fmt.Sprintf("Error updating email: %v", err))
+		}
+
+		respondWithJSON(w, 200, "Email successfully verified")
+		return
+	}
+
+	respondWithError(w, 400, "Token is expired, please request another one")
 }

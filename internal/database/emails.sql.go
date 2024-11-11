@@ -80,3 +80,19 @@ func (q *Queries) GetEmailByID(ctx context.Context, id uuid.UUID) (Email, error)
 	)
 	return i, err
 }
+
+const updateEmailIsVerified = `-- name: UpdateEmailIsVerified :exec
+UPDATE emails
+SET is_verified = $2
+WHERE id = $1
+`
+
+type UpdateEmailIsVerifiedParams struct {
+	ID         uuid.UUID
+	IsVerified bool
+}
+
+func (q *Queries) UpdateEmailIsVerified(ctx context.Context, arg UpdateEmailIsVerifiedParams) error {
+	_, err := q.db.ExecContext(ctx, updateEmailIsVerified, arg.ID, arg.IsVerified)
+	return err
+}

@@ -49,6 +49,7 @@ func main() {
 	router.HandleFunc("GET /email/{id}", apiCfg.handlerGetEmail)
 
 	router.HandleFunc("POST /email/{id}/token", apiCfg.handlerCreateToken)
+	router.HandleFunc("GET /verify", apiCfg.handlerVerify)
 
 	server := http.Server{
 		Addr:    ":" + portString,

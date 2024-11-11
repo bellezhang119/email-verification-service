@@ -12,3 +12,8 @@ WHERE id = $1;
 SELECT id, created_at, updated_at, email, is_verified
 FROM emails
 WHERE email = $1;
+
+-- name: UpdateEmailIsVerified :exec
+UPDATE emails
+SET is_verified = $2
+WHERE id = $1;
